@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">iiVisu</string>
     <string name="record">Record</string>
+    <string name="stop">Stop</string>
 </resources>
