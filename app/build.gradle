@@ -8,7 +8,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.imn.iivisu"
+        applicationId "com.imn.iivisusample"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
@@ -40,6 +40,7 @@ kotlin {
 }
 
 dependencies {
+    implementation project(path: ':iivisu')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 

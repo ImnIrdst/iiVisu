@@ -1,4 +1,4 @@
-package com.imn.iivisu.utils
+package com.imn.ivisusample.utils
 
 import android.Manifest
 import android.app.Activity
