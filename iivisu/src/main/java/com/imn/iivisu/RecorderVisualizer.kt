@@ -24,4 +24,10 @@ class RecorderVisualizer : BaseVisualizer {
         cursorPosition = (amps.size - 1).toFloat()
         invalidate()
     }
+
+    fun clear() {
+        amps.clear()
+        cursorPosition = 0f
+        invalidate()
+    }
 }
