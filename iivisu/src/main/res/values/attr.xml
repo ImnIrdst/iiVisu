@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MusicBar">
+        <attr name="LoadedBarPrimeColor" format="color"/>
+        <attr name="LoadedBarSecondaryColor" format="color"/>
+        <attr name="backgroundBarPrimeColor" format="color"/>
+        <attr name="backgroundBarSecondaryColor" format="color"/>
+        <attr name="spaceBetweenBar" format="dimension" />
+        <attr name="barWidth" format="dimension"/>
+        <attr name="barDuration" format="integer"/>
+        <attr name="divided" format="boolean"/>
+        <attr name="dividerSize" format="float"/>
+    </declare-styleable>
+
+</resources>

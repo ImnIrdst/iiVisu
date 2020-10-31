@@ -1,2 +1,3 @@
+include ':iivisu'
 include ':app'
 rootProject.name = "iiVisu"
