@@ -109,6 +109,7 @@ class PlayerVisualizer : BaseVisualizer {
     }
 
     fun updateTime(currentTime: Int, isPlaying: Boolean) {
+        println("imnimn $currentTime")
         this.isPlaying = isPlaying
         this.cursorPosition = min(currentTime / tickDuration.toFloat(), tickCount.toFloat())
         invalidate()

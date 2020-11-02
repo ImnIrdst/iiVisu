@@ -112,7 +112,7 @@ open class BaseVisualizer : View {
     private fun drawStraightBar(canvas: Canvas, startX: Float, height: Int, baseLine: Int) {
         val startY = baseLine + (height / 2).toFloat()
         val stopY = startY - height
-        if (startX < width / 2) {
+        if (startX <= width / 2) {
             canvas.drawLine(startX, startY, startX, stopY, loadedBarPrimeColor)
         } else {
             canvas.drawLine(startX, startY, startX, stopY, backgroundBarPrimeColor)
@@ -127,6 +127,6 @@ open class BaseVisualizer : View {
 
     companion object {
         var DEFAULT_MAX_AMP = 50f
-        var DEFAULT_BAR_DURATION = 100
+        var DEFAULT_BAR_DURATION = 50
     }
 }

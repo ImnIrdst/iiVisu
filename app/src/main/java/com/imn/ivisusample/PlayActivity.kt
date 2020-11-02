@@ -4,19 +4,19 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.imn.ivisusample.databinding.ActivityPlayBinding
-import com.imn.ivisusample.player.Player
+import com.imn.ivisusample.player.AudioPlayer
 
 class PlayActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayBinding
-    private lateinit var player: Player
+    private lateinit var player: AudioPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        player = Player.getInstance(this)
+        player = AudioPlayer.getInstance(this)
 
         binding.playButton.setOnClickListener {
             player.play()
@@ -25,8 +25,10 @@ class PlayActivity : AppCompatActivity() {
         lifecycleScope.launchWhenCreated {
             println("imnimn startLoading")
             val amps = player.loadAmps()
-            println("imnimn $amps")
+            binding.visualizer.setWaveForm(amps, player.tickDuration)
         }
+
+        player.onProgress = { binding.visualizer.updateTime(it.toInt(), true) }
     }
 
 }

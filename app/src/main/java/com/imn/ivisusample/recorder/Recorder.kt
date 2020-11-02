@@ -1,6 +1,7 @@
 package com.imn.ivisusample.recorder
 
 import android.content.Context
+import android.media.AudioFormat
 import android.media.AudioRecord
 import com.github.squti.androidwaverecorder.WaveConfig
 import com.github.squti.androidwaverecorder.WaveRecorder
@@ -41,6 +42,22 @@ class Recorder private constructor(context: Context) {
             recordingConfig.channels,
             recordingConfig.audioEncoding
         )
+
+    val tickDuration: Int
+        get() = (bufferSize.toDouble() * 1000 / byteRate).toInt()
+
+    private val channelCount: Int
+        get() = if (recordingConfig.channels == AudioFormat.CHANNEL_IN_MONO) 1 else 2
+
+    private val byteRate: Long
+        get() = (bitPerSample * recordingConfig.sampleRate * channelCount / 8).toLong()
+
+    private val bitPerSample: Int
+        get() = when (recordingConfig.audioEncoding) {
+            AudioFormat.ENCODING_PCM_8BIT -> 8
+            AudioFormat.ENCODING_PCM_16BIT -> 16
+            else -> 16
+        }
 
     companion object : SingletonHolder<Recorder, Context>(::Recorder)
 }

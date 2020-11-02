@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".PlayActivity">
 
+    <com.imn.iivisu.PlayerVisualizer
+        android:id="@+id/visualizer"
+        android:layout_width="0dp"
+        android:layout_height="128dp"
+        app:barWidth="3dp"
+        app:loadedBarPrimeColor="@color/primaryLight"
+        app:layout_constraintBottom_toTopOf="@id/play_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/play_button"
         android:layout_width="wrap_content"
