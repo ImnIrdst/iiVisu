@@ -2,6 +2,7 @@ package com.imn.ivisusample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.imn.ivisusample.databinding.ActivityPlayBinding
 import com.imn.ivisusample.player.Player
 
@@ -19,6 +20,12 @@ class PlayActivity : AppCompatActivity() {
 
         binding.playButton.setOnClickListener {
             player.play()
+        }
+
+        lifecycleScope.launchWhenCreated {
+            println("imnimn startLoading")
+            val amps = player.loadAmps()
+            println("imnimn $amps")
         }
     }
 
