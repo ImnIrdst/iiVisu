@@ -3,6 +3,7 @@ package com.imn.ivisusample
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.imn.ivisusample.databinding.ActivityMainBinding
 import com.imn.ivisusample.recorder.Recorder
 import com.imn.ivisusample.utils.checkAudioPermission
@@ -17,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         checkAudioPermission(AUDIO_PERMISSION_REQUEST_CODE)
 

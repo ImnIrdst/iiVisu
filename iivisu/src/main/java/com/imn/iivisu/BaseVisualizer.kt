@@ -68,21 +68,21 @@ open class BaseVisualizer : View {
     private fun loadAttribute(context: Context, attrs: AttributeSet?) {
         val typedArray = context.theme.obtainStyledAttributes(
             attrs,
-            R.styleable.MusicBar, 0, 0
+            R.styleable.iiVisu, 0, 0
         )
         try {
             spaceBetweenBar = typedArray
-                .getDimension(R.styleable.MusicBar_spaceBetweenBar, context.dpToPx(2f))
-            barWidth = typedArray.getDimension(R.styleable.MusicBar_barWidth, 2f)
-            barDuration = typedArray.getInt(R.styleable.MusicBar_barDuration, 1000)
+                .getDimension(R.styleable.iiVisu_spaceBetweenBar, context.dpToPx(2f))
+            barWidth = typedArray.getDimension(R.styleable.iiVisu_barWidth, 2f)
+            barDuration = typedArray.getInt(R.styleable.iiVisu_barDuration, 1000)
             loadedBarPrimeColor.strokeWidth = barWidth
             backgroundBarPrimeColor.strokeWidth = barWidth
             loadedBarPrimeColor.color = typedArray.getColor(
-                R.styleable.MusicBar_LoadedBarPrimeColor,
+                R.styleable.iiVisu_loadedBarPrimeColor,
                 context.getColorCompat(R.color.orange)
             )
             backgroundBarPrimeColor.color = typedArray.getColor(
-                R.styleable.MusicBar_backgroundBarPrimeColor,
+                R.styleable.iiVisu_backgroundBarPrimeColor,
                 context.getColorCompat(R.color.gray)
             )
         } finally {
