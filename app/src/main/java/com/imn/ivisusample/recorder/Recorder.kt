@@ -3,7 +3,7 @@ package com.imn.ivisusample.recorder
 import android.content.Context
 import com.github.squti.androidwaverecorder.WaveRecorder
 import com.imn.ivisusample.utils.SingletonHolder
-import java.io.File
+import com.imn.ivisusample.utils.recordFile
 
 class Recorder private constructor(context: Context) {
 
@@ -14,9 +14,8 @@ class Recorder private constructor(context: Context) {
             recorder.onAmplitudeListener = value
             field = value
         }
-
-    val recordFile = File(context.filesDir, "rec.wav")
-    private val recorder = WaveRecorder(recordFile.toString())
+    
+    private val recorder = WaveRecorder(context.recordFile.toString())
 
     private var isRecording = false
 
