@@ -1,5 +1,6 @@
 package com.imn.ivisusample
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.imn.ivisusample.databinding.ActivityMainBinding
@@ -21,7 +22,11 @@ class MainActivity : AppCompatActivity() {
 
         recorder = Recorder.getInstance(this).apply {
             onStartRecording = { binding.recordButton.text = getString(R.string.stop) }
-            onStopRecording = { binding.recordButton.text = getString(R.string.record) }
+            onStopRecording = {
+                binding.recorderVisualizer.clear()
+                binding.recordButton.text = getString(R.string.record)
+                startActivity(Intent(this@MainActivity, PlayActivity::class.java))
+            }
             onAmpListener = {
                 binding.recorderVisualizer.addAmp(sqrt(it.toFloat()).toInt()) // TODO how to normalize
             }

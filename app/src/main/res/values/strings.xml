@@ -2,4 +2,5 @@
     <string name="app_name">iiVisu</string>
     <string name="record">Record</string>
     <string name="stop">Stop</string>
+    <string name="play">Play</string>
 </resources>

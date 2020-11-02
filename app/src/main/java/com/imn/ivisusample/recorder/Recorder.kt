@@ -15,7 +15,7 @@ class Recorder private constructor(context: Context) {
             field = value
         }
 
-    private val recordFile = File(context.filesDir, "rec.wav")
+    val recordFile = File(context.filesDir, "rec.wav")
     private val recorder = WaveRecorder(recordFile.toString())
 
     private var isRecording = false
