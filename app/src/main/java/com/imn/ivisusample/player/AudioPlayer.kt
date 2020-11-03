@@ -40,13 +40,10 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
 
     fun togglePlay() {
         player.apply {
-            playWhenReady = if (!playWhenReady) {
-                seekTo(0)
-                true
+            if (!playWhenReady) {
+                playWhenReady = true
             } else {
-                timer?.cancel()
-                onStop?.invoke()
-                false
+                pause()
             }
         }
     }
@@ -111,8 +108,6 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
                         }
 
                         override fun onFinish() {
-                            player.playWhenReady = false
-                            onStop?.invoke()
                             updateProgress(player.duration)
                         }
                     }.start()
@@ -120,6 +115,8 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
                 }
             }
             Player.STATE_ENDED -> {
+                seekTo(0)
+                player.playWhenReady = false
                 onStop?.invoke()
             }
             Player.STATE_BUFFERING -> Unit

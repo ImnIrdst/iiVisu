@@ -17,10 +17,10 @@ class PlayActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         player = AudioPlayer.getInstance(this).apply {
-            onStart = { binding.playButton.text = getString(R.string.stop) }
+            onStart = { binding.playButton.text = getString(R.string.pause) }
             onStop = { binding.playButton.text = getString(R.string.play) }
-            onPause = { binding.playButton.text = getString(R.string.pause) }
-            onResume = { binding.playButton.text = getString(R.string.play) }
+            onPause = { binding.playButton.text = getString(R.string.resume) }
+            onResume = { binding.playButton.text = getString(R.string.pause) }
             onProgress = { time, isPlaying ->
                 binding.visualizer.updateTime(time.toInt(), isPlaying)
             }
