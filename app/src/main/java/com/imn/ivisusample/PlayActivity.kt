@@ -16,19 +16,32 @@ class PlayActivity : AppCompatActivity() {
         binding = ActivityPlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        player = AudioPlayer.getInstance(this)
-
-        binding.playButton.setOnClickListener {
-            player.play()
+        player = AudioPlayer.getInstance(this).apply {
+            onStart = { binding.playButton.text = getString(R.string.stop) }
+            onStop = { binding.playButton.text = getString(R.string.play) }
+            onPause = { binding.playButton.text = getString(R.string.pause) }
+            onResume = { binding.playButton.text = getString(R.string.play) }
+            onProgress = { time, isPlaying ->
+                binding.visualizer.updateTime(time.toInt(), isPlaying)
+            }
         }
+        binding.visualizer.apply {
+            onStartSeeking = { player.pause() }
+            onSeeking = {}
+            onFinishedSeeking = { time, isPlayingBefore ->
+                player.seekTo(time)
+                if (isPlayingBefore) {
+                    player.resume()
+                }
+            }
+        }
+        binding.playButton.setOnClickListener { player.togglePlay() }
 
         lifecycleScope.launchWhenCreated {
-            println("imnimn startLoading")
             val amps = player.loadAmps()
             binding.visualizer.setWaveForm(amps, player.tickDuration)
         }
 
-        player.onProgress = { binding.visualizer.updateTime(it.toInt(), true) }
     }
 
 }

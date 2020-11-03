@@ -2,6 +2,7 @@ package com.imn.ivisusample.player
 
 import android.content.Context
 import android.os.CountDownTimer
+import android.util.Log
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -19,8 +20,12 @@ import java.nio.ByteOrder
 
 class AudioPlayer private constructor(context: Context) : Player.EventListener {
 
+    var onProgress: ((Long, Boolean) -> Unit)? = null
+    var onStart: (() -> Unit)? = null
+    var onStop: (() -> Unit)? = null
+    var onPause: (() -> Unit)? = null
+    var onResume: (() -> Unit)? = null
     val tickDuration = Recorder.getInstance(context).tickDuration
-    var onProgress: ((Long) -> Unit)? = null
 
     private var timer: CountDownTimer? = null
     private val recordFile = context.recordFile
@@ -29,16 +34,42 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
         SimpleExoPlayer.Builder(context).build()
             .apply {
                 prepare(context.recordFile.toMediaSource())
+                addListener(this@AudioPlayer)
             }
     }
 
-
-    fun play() {
+    fun togglePlay() {
         player.apply {
-            seekTo(0)
-            playWhenReady = true
-            addListener(this@AudioPlayer)
+            playWhenReady = if (!playWhenReady) {
+                seekTo(0)
+                true
+            } else {
+                timer?.cancel()
+                onStop?.invoke()
+                false
+            }
         }
+    }
+
+    fun seekTo(time: Int) {
+        player.seekTo(time.toLong())
+    }
+
+    fun resume() {
+        player.playWhenReady = true
+        updateProgress()
+        onResume?.invoke()
+    }
+
+    fun pause() {
+        timer?.cancel()
+        player.playWhenReady = false
+        updateProgress()
+        onPause?.invoke()
+    }
+
+    private fun updateProgress(position: Long = player.currentPosition) {
+        onProgress?.invoke(position, player.playWhenReady)
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
@@ -71,34 +102,37 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
         super.onPlayerStateChanged(playWhenReady, playbackState)
         when (playbackState) {
             Player.STATE_READY -> {
-                println("imnimn STATE_READY")
-                println("imnimn duration ${player.duration}")
-                timer = object : CountDownTimer(player.duration, 20) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        onProgress?.invoke(player.currentPosition)
-                    }
+                if (player.playWhenReady) {
+                    val timerDuration = player.duration - player.currentPosition
+                    timer?.cancel()
+                    timer = object : CountDownTimer(timerDuration, 20) {
+                        override fun onTick(millisUntilFinished: Long) {
+                            updateProgress()
+                        }
 
-                    override fun onFinish() {
-                        onProgress?.invoke(player.duration)
-                    }
-                }.start()
+                        override fun onFinish() {
+                            player.playWhenReady = false
+                            onStop?.invoke()
+                            updateProgress(player.duration)
+                        }
+                    }.start()
+                    onStart?.invoke()
+                }
             }
             Player.STATE_ENDED -> {
-                println("imnimn STATE_ENDED")
+                onStop?.invoke()
             }
-            Player.STATE_BUFFERING -> {
-                println("imnimn STATE_BUFFERING")
-            }
-            Player.STATE_IDLE -> {
-                println("imnimn STATE_IDLE")
-            }
+            Player.STATE_BUFFERING -> Unit
+            Player.STATE_IDLE -> Unit
         }
     }
 
     override fun onPlayerError(error: ExoPlaybackException) {
         super.onPlayerError(error)
-        println("imnimn $error")
+        Log.e(TAG, error.toString())
     }
 
-    companion object : SingletonHolder<AudioPlayer, Context>(::AudioPlayer)
+    companion object : SingletonHolder<AudioPlayer, Context>(::AudioPlayer) {
+        val TAG = AudioPlayer::class.simpleName
+    }
 }
