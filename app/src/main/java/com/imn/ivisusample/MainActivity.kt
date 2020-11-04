@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.imn.ivisusample.databinding.ActivityMainBinding
 import com.imn.ivisusample.recorder.Recorder
 import com.imn.ivisusample.utils.checkAudioPermission
+import com.imn.ivisusample.utils.formatAsTime
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
@@ -24,17 +25,19 @@ class MainActivity : AppCompatActivity() {
         checkAudioPermission(AUDIO_PERMISSION_REQUEST_CODE)
 
         recorder = Recorder.getInstance(this).apply {
-            onStartRecording = { binding.recordButton.text = getString(R.string.stop) }
-            onStopRecording = {
+            onStart = { binding.recordButton.text = getString(R.string.stop) }
+            onStop = {
                 binding.recorderVisualizer.clear()
                 binding.recordButton.text = getString(R.string.record)
                 startActivity(Intent(this@MainActivity, PlayActivity::class.java))
             }
             onAmpListener = {
-                binding.recorderVisualizer.addAmp(sqrt(it.toFloat()).toInt()) // TODO how to normalize
+                runOnUiThread {
+                    binding.timelineTextView.text = recorder.getCurrentTime().formatAsTime()
+                    binding.recorderVisualizer.addAmp(sqrt(it.toFloat()).toInt()) // TODO how to normalize
+                }
             }
         }
-
         binding.recordButton.setOnClickListener { recorder.toggleRecording() }
     }
 

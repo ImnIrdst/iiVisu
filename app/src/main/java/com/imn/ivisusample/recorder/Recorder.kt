@@ -10,14 +10,15 @@ import com.imn.ivisusample.utils.recordFile
 
 class Recorder private constructor(context: Context) {
 
-    var onStartRecording: (() -> Unit)? = null
-    var onStopRecording: (() -> Unit)? = null
+    var onStart: (() -> Unit)? = null
+    var onStop: (() -> Unit)? = null
     var onAmpListener: ((Int) -> Unit)? = null
         set(value) {
             recorder.onAmplitudeListener = value
             field = value
         }
 
+    private var startTime: Long = 0
     private val recordingConfig = WaveConfig()
     private val recorder = WaveRecorder(context.recordFile.toString())
         .apply { waveConfig = recordingConfig }
@@ -26,15 +27,18 @@ class Recorder private constructor(context: Context) {
 
     fun toggleRecording() {
         isRecording = if (!isRecording) {
+            startTime = System.currentTimeMillis()
             recorder.startRecording()
-            onStartRecording?.invoke()
+            onStart?.invoke()
             true
         } else {
             recorder.stopRecording()
-            onStopRecording?.invoke()
+            onStop?.invoke()
             false
         }
     }
+
+    fun getCurrentTime() = System.currentTimeMillis() - startTime
 
     val bufferSize: Int
         get() = AudioRecord.getMinBufferSize(

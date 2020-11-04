@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:layout_margin="@dimen/spacing_double"
-        android:text="00:00"
+        android:text="@string/zero_time"
         android:textColor="@color/primaryLight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

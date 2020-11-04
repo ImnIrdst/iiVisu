@@ -13,11 +13,24 @@
         android:layout_height="128dp"
         app:barWidth="3dp"
         app:loadedBarPrimeColor="@color/primaryLight"
-        app:layout_constraintBottom_toTopOf="@id/record_button"
+        app:layout_constraintBottom_toTopOf="@id/timeline_text_view"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
+    <TextView
+        android:id="@+id/timeline_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_margin="@dimen/spacing_double"
+        android:text="@string/zero_time"
+        android:textColor="@color/primaryLight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recorder_visualizer"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/record_button"
