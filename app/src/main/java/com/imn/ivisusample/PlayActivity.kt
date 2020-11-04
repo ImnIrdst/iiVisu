@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.imn.ivisusample.databinding.ActivityPlayBinding
 import com.imn.ivisusample.player.AudioPlayer
+import com.imn.ivisusample.utils.formatAsTime
 
 class PlayActivity : AppCompatActivity() {
 
@@ -22,12 +23,13 @@ class PlayActivity : AppCompatActivity() {
             onPause = { binding.playButton.text = getString(R.string.resume) }
             onResume = { binding.playButton.text = getString(R.string.pause) }
             onProgress = { time, isPlaying ->
+                binding.timelineTextView.text = time.formatAsTime()
                 binding.visualizer.updateTime(time.toInt(), isPlaying)
             }
         }
         binding.visualizer.apply {
-            onStartSeeking = { player.pause() }
-            onSeeking = {}
+            onStartSeeking = { player.pause() } // TODO remove excessive toLongs
+            onSeeking = { binding.timelineTextView.text = it.toLong().formatAsTime() }
             onFinishedSeeking = { time, isPlayingBefore ->
                 player.seekTo(time)
                 if (isPlayingBefore) {
