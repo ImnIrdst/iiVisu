@@ -20,7 +20,8 @@ class RecorderVisualizer : BaseVisualizer {
     ) : super(context, attrs, defStyleAttr)
 
     fun addAmp(amp: Int) {
-        amps.add(amp)
+        val normalizedAmp = ampNormalizer.invoke(amp)
+        amps.add(normalizedAmp)
         cursorPosition = (amps.size - 1).toFloat()
         invalidate()
     }

@@ -8,6 +8,7 @@ import android.view.View
 import com.imn.ivisu.R
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sqrt
 
 open class BaseVisualizer : View {
 
@@ -32,7 +33,9 @@ open class BaseVisualizer : View {
         loadAttribute(context, attrs)
     }
 
-    protected var maxAmp = DEFAULT_MAX_AMP
+    var ampNormalizer: (Int) -> Int = { sqrt(it.toFloat()).toInt() }
+    protected var maxAmp = 50f
+    protected var approximateBarDuration = 50
     protected var amps = mutableListOf<Int>()
     protected var spaceBetweenBar = 128f
     protected var cursorPosition = 0f
@@ -73,14 +76,17 @@ open class BaseVisualizer : View {
         try {
             spaceBetweenBar = typedArray
                 .getDimension(R.styleable.iiVisu_spaceBetweenBar, context.dpToPx(2f))
-            barWidth = typedArray.getDimension(R.styleable.iiVisu_barWidth, 2f)
-            barDuration = typedArray.getInt(R.styleable.iiVisu_barDuration, 1000)
-            loadedBarPrimeColor.strokeWidth = barWidth
-            backgroundBarPrimeColor.strokeWidth = barWidth
+            approximateBarDuration =
+                typedArray.getInt(R.styleable.iiVisu_approximateBarDuration, 50)
+            barWidth = typedArray
+                .getDimension(R.styleable.iiVisu_barWidth, 2f)
+            maxAmp = typedArray
+                .getFloat(R.styleable.iiVisu_maxAmp, 50f)
             loadedBarPrimeColor.color = typedArray.getColor(
                 R.styleable.iiVisu_loadedBarPrimeColor,
                 context.getColorCompat(R.color.orange)
             )
+            backgroundBarPrimeColor.strokeWidth = barWidth
             backgroundBarPrimeColor.color = typedArray.getColor(
                 R.styleable.iiVisu_backgroundBarPrimeColor,
                 context.getColorCompat(R.color.gray)
@@ -124,9 +130,4 @@ open class BaseVisualizer : View {
     private fun getEndBar() = min(amps.size, getStartBar() + maxVisibleBars)
     private fun getBarHeightAt(i: Int) = height * max(0.01f, min(amps[i] / maxAmp, 0.9f))
     private fun getBarPosition() = cursorPosition / tickPerBar.toFloat()
-
-    companion object {
-        var DEFAULT_MAX_AMP = 50f
-        var DEFAULT_BAR_DURATION = 50
-    }
 }

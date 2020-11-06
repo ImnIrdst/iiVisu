@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.imn.ivisusample.databinding.ActivityPlayBinding
 import com.imn.ivisusample.player.AudioPlayer
 import com.imn.ivisusample.utils.formatAsTime
+import kotlin.math.sqrt
 
 class PlayActivity : AppCompatActivity() {
 
@@ -24,6 +25,7 @@ class PlayActivity : AppCompatActivity() {
             onResume = { binding.playButton.text = getString(R.string.pause) }
             onProgress = { time, isPlaying ->
                 binding.timelineTextView.text = time.formatAsTime()
+                binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
                 binding.visualizer.updateTime(time.toInt(), isPlaying)
             }
         }

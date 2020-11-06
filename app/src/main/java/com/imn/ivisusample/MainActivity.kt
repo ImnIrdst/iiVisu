@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         checkAudioPermission(AUDIO_PERMISSION_REQUEST_CODE)
 
-        recorder = Recorder.getInstance(this).apply {
+        recorder = Recorder.getInstance(this).apply {// TODO use applicationContext
             onStart = { binding.recordButton.text = getString(R.string.stop) }
             onStop = {
                 binding.recorderVisualizer.clear()
@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity() {
             onAmpListener = {
                 runOnUiThread {
                     binding.timelineTextView.text = recorder.getCurrentTime().formatAsTime()
-                    binding.recorderVisualizer.addAmp(sqrt(it.toFloat()).toInt()) // TODO how to normalize
+                    binding.recorderVisualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
+                    binding.recorderVisualizer.addAmp(it)
                 }
             }
         }

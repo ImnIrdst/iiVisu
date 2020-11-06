@@ -85,31 +85,32 @@ class PlayerVisualizer : BaseVisualizer {
         }
     }
 
-    fun setWaveForm(amp: List<Int>, tickDuration: Int) {
+    fun setWaveForm(amps: List<Int>, tickDuration: Int) {
+        val normalizedAmps = amps.map(ampNormalizer)
+
         this.amps.clear()
         this.tickDuration = tickDuration
 
         // show five bars per second
-        this.tickPerBar = DEFAULT_BAR_DURATION / (this.tickDuration)
+        this.tickPerBar = approximateBarDuration / (this.tickDuration)
         this.barDuration = tickPerBar * this.tickDuration
 
-        for (i in amp.indices step tickPerBar) {
-            val j = min(amp.size - 1, i + tickPerBar)
-            this.amps.add(amp.subList(i, j).average().toInt())
+        for (i in normalizedAmps.indices step tickPerBar) {
+            val j = min(normalizedAmps.size - 1, i + tickPerBar)
+            this.amps.add(normalizedAmps.subList(i, j).average().toInt())
         }
 
-        this.tickCount = amps.size * tickPerBar
+        this.tickCount = this.amps.size * tickPerBar
         this.cursorPosition = 0f
 
-        amps.maxOrNull()?.let {
+        this.amps.maxOrNull()?.let {
             this.maxAmp = max(it.toFloat(), maxAmp)
         }
-
+        
         invalidate()
     }
 
     fun updateTime(currentTime: Int, isPlaying: Boolean) {
-        println("imnimn $currentTime")
         this.isPlaying = isPlaying
         this.cursorPosition = min(currentTime / tickDuration.toFloat(), tickCount.toFloat())
         invalidate()
