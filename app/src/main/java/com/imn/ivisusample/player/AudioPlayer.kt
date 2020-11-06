@@ -129,6 +129,14 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
         Log.e(TAG, error.toString())
     }
 
+    fun release() {
+        onProgress = null
+        onStart = null
+        onStop = null
+        onPause = null
+        onResume = null
+    }
+
     companion object : SingletonHolder<AudioPlayer, Context>(::AudioPlayer) {
         val TAG = AudioPlayer::class.simpleName
     }

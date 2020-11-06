@@ -18,17 +18,7 @@ class PlayActivity : AppCompatActivity() {
         binding = ActivityPlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        player = AudioPlayer.getInstance(this).apply {
-            onStart = { binding.playButton.text = getString(R.string.pause) }
-            onStop = { binding.playButton.text = getString(R.string.play) }
-            onPause = { binding.playButton.text = getString(R.string.resume) }
-            onResume = { binding.playButton.text = getString(R.string.pause) }
-            onProgress = { time, isPlaying ->
-                binding.timelineTextView.text = time.formatAsTime()
-                binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
-                binding.visualizer.updateTime(time.toInt(), isPlaying)
-            }
-        }
+        player = AudioPlayer.getInstance(applicationContext)
         binding.visualizer.apply {
             onStartSeeking = { player.pause() } // TODO remove excessive toLongs
             onSeeking = { binding.timelineTextView.text = it.toLong().formatAsTime() }
@@ -48,4 +38,23 @@ class PlayActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        player.apply {
+            onStart = { binding.playButton.text = getString(R.string.pause) }
+            onStop = { binding.playButton.text = getString(R.string.play) }
+            onPause = { binding.playButton.text = getString(R.string.resume) }
+            onResume = { binding.playButton.text = getString(R.string.pause) }
+            onProgress = { time, isPlaying ->
+                binding.timelineTextView.text = time.formatAsTime()
+                binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
+                binding.visualizer.updateTime(time.toInt(), isPlaying)
+            }
+        }
+    }
+
+    override fun onStop() {
+        player.release()
+        super.onStop()
+    }
 }
