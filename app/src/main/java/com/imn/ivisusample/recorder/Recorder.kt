@@ -63,5 +63,11 @@ class Recorder private constructor(context: Context) {
             else -> 16
         }
 
+    fun release() {
+        onStart = null
+        onStop = null
+        recorder.onAmplitudeListener = null
+    }
+
     companion object : SingletonHolder<Recorder, Context>(::Recorder)
 }

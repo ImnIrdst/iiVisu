@@ -24,7 +24,13 @@ class MainActivity : AppCompatActivity() {
 
         checkAudioPermission(AUDIO_PERMISSION_REQUEST_CODE)
 
-        recorder = Recorder.getInstance(this).apply {// TODO use applicationContext
+        recorder = Recorder.getInstance(applicationContext)
+        binding.recordButton.setOnClickListener { recorder.toggleRecording() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        recorder.apply {
             onStart = { binding.recordButton.text = getString(R.string.stop) }
             onStop = {
                 binding.recorderVisualizer.clear()
@@ -39,7 +45,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.recordButton.setOnClickListener { recorder.toggleRecording() }
+    }
+
+    override fun onStop() {
+        recorder.release()
+        super.onStop()
     }
 
     companion object {
