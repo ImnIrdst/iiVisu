@@ -21,7 +21,7 @@ class PlayActivity : AppCompatActivity() {
         player = AudioPlayer.getInstance(applicationContext)
         binding.visualizer.apply {
             onStartSeeking = { player.pause() } // TODO remove excessive toLongs
-            onSeeking = { binding.timelineTextView.text = it.toLong().formatAsTime() }
+            onSeeking = { binding.timelineTextView.text = it.formatAsTime() }
             onFinishedSeeking = { time, isPlayingBefore ->
                 player.seekTo(time)
                 if (isPlayingBefore) {

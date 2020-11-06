@@ -96,8 +96,8 @@ open class BaseVisualizer : View {
         }
     }
 
-    protected val currentDuration: Int
-        get() = cursorPosition.toInt() * tickDuration
+    protected val currentDuration: Long
+        get() = cursorPosition.toLong() * tickDuration
 
 
     override fun onDraw(canvas: Canvas) {

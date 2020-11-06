@@ -26,8 +26,8 @@ class PlayerVisualizer : BaseVisualizer {
 
 
     var onStartSeeking: (() -> Unit)? = null
-    var onSeeking: ((Int) -> Unit)? = null
-    var onFinishedSeeking: ((Int, Boolean) -> Unit)? = null
+    var onSeeking: ((Long) -> Unit)? = null
+    var onFinishedSeeking: ((Long, Boolean) -> Unit)? = null
 
     private var initialTouchX = 0f
     private var firstTouchX = 0f

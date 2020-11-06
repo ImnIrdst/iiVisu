@@ -48,8 +48,8 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
         }
     }
 
-    fun seekTo(time: Int) {
-        player.seekTo(time.toLong())
+    fun seekTo(time: Long) {
+        player.seekTo(time)
     }
 
     fun resume() {
