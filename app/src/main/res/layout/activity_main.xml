@@ -8,9 +8,9 @@
 
 
     <com.imn.iivisu.RecorderVisualizer
-        android:id="@+id/recorder_visualizer"
+        android:id="@+id/visualizer"
         android:layout_width="0dp"
-        android:layout_height="128dp"
+        android:layout_height="256dp"
         app:maxAmp="100"
         app:barWidth="3dp"
         app:spaceBetweenBar="2dp"
@@ -33,7 +33,7 @@
         android:textColor="@color/primaryLight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recorder_visualizer"
+        app:layout_constraintTop_toBottomOf="@id/visualizer"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.button.MaterialButton

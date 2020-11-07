@@ -30,18 +30,20 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
+        
         recorder.apply {
             onStart = { binding.recordButton.text = getString(R.string.stop) }
             onStop = {
-                binding.recorderVisualizer.clear()
+                binding.visualizer.clear()
                 binding.recordButton.text = getString(R.string.record)
                 startActivity(Intent(this@MainActivity, PlayActivity::class.java))
             }
             onAmpListener = {
                 runOnUiThread {
                     binding.timelineTextView.text = recorder.getCurrentTime().formatAsTime()
-                    binding.recorderVisualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
-                    binding.recorderVisualizer.addAmp(it)
+
+                    binding.visualizer.addAmp(it)
                 }
             }
         }

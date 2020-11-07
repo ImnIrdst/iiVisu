@@ -9,7 +9,7 @@
     <com.imn.iivisu.PlayerVisualizer
         android:id="@+id/visualizer"
         android:layout_width="0dp"
-        android:layout_height="128dp"
+        android:layout_height="256dp"
         android:layout_marginBottom="@dimen/spacing_double"
         app:maxAmp="100"
         app:barWidth="3dp"

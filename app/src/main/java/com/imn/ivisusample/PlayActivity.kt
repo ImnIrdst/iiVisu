@@ -40,6 +40,8 @@ class PlayActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
+        
         player.apply {
             onStart = { binding.playButton.text = getString(R.string.pause) }
             onStop = { binding.playButton.text = getString(R.string.play) }
@@ -47,7 +49,6 @@ class PlayActivity : AppCompatActivity() {
             onResume = { binding.playButton.text = getString(R.string.pause) }
             onProgress = { time, isPlaying ->
                 binding.timelineTextView.text = time.formatAsTime()
-                binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
                 binding.visualizer.updateTime(time.toInt(), isPlaying)
             }
         }
