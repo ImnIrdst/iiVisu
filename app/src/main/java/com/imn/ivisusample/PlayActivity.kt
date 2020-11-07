@@ -20,7 +20,7 @@ class PlayActivity : AppCompatActivity() {
 
         player = AudioPlayer.getInstance(applicationContext)
         binding.visualizer.apply {
-            onStartSeeking = { player.pause() } // TODO remove excessive toLongs
+            onStartSeeking = { player.pause() }
             onSeeking = { binding.timelineTextView.text = it.formatAsTime() }
             onFinishedSeeking = { time, isPlayingBefore ->
                 player.seekTo(time)
@@ -41,7 +41,7 @@ class PlayActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
-        
+
         player.apply {
             onStart = { binding.playButton.text = getString(R.string.pause) }
             onStop = { binding.playButton.text = getString(R.string.play) }
