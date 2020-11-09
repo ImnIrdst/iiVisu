@@ -1,5 +1,6 @@
 # iiVisu
 [![](https://jitpack.io/v/ImnIrdst/iiVisu.svg)](https://jitpack.io/#ImnIrdst/iiVisu)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-iiVisu-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/8186)
 
 A player/ recorder visualizer with the swipe to seek functionality.
 
