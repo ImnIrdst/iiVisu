@@ -24,7 +24,7 @@ allprojects {
 Step 2. Add the dependency
 ```
 dependencies {
-  implementation 'com.github.ImnIrdst:iiVisu:Tag'
+  implementation 'com.github.imnirdst:iivisu:1.0.0'
 }
 ```
 
