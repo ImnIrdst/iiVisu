@@ -110,9 +110,14 @@ open class BaseVisualizer : View {
         super.onDraw(canvas)
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        maxVisibleBars = (width / (barWidth + spaceBetweenBar)).toInt()
+    }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        maxVisibleBars = (width / (barWidth + spaceBetweenBar)).toInt()
+        maxVisibleBars = (w / (barWidth + spaceBetweenBar)).toInt()
     }
 
     private fun drawStraightBar(canvas: Canvas, startX: Float, height: Int, baseLine: Int) {
