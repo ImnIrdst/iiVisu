@@ -6,7 +6,8 @@ A player/ recorder visualizer with the swipe to seek functionality.
 
 # Demo
 
-![](https://github.com/ImnIrdst/iiVisu/blob/main/demo/iivisu_player.gif)
+![](https://github.com/ImnIrdst/iiVisu/blob/main/demo/iivisu-record.gif)
+![](https://github.com/ImnIrdst/iiVisu/blob/main/demo/iivisu-play.gif)
 
 # Setup
 
@@ -24,13 +25,13 @@ allprojects {
 Step 2. Add the dependency
 ```
 dependencies {
-  implementation 'com.github.imnirdst:iivisu:1.0.0'
+  implementation 'com.github.imnirdst:iivisu:1.0.1'
 }
 ```
 
 # Usage
 
-This repostory contains a sample app that shows how to use iiVisu.
+This repository contains a sample app that shows how to use iiVisu.
 
 ## Recorder
 
@@ -102,29 +103,29 @@ player.onProgress = { time, isPlaying ->
 ```
 
 # Documentation
-- `maxAmp`: Maximum amp that you expected to recieve from the mic. Amps with higher than maxAmp are shown as a full height bar. This is calculated automatically in the `PlayerVisualizer`.
+- `maxAmp`: Maximum amp that you expected to receive from the mic. Amps with higher than maxAmp are shown as a full height bar. This is calculated automatically in the `PlayerVisualizer`.
 
 - `barWidth`: Width of each bar.
 
 - `spaceBetweenBar`: Space between each bar.
 
-- `approximateBarDuration`: Defines aproximate duration of each bar. The exact duration of each bar is calculated and stored in the `barDuration` variable. This is only used in `PlayerVisualizer`. `RecorderVisualizer` draws a bar per each recieved amp.
+- `approximateBarDuration`: Defines approximate duration of each bar. The exact duration of each bar is calculated and stored in the `barDuration` variable. This is only used in `PlayerVisualizer`. `RecorderVisualizer` draws a bar per each received amp.
 
 - `loadedBarPrimeColor`: Defines loaded bar color.
 
 - `backgroundBarPrimeColor`: Defines background (unloaded) bar color.
 
-- `ampNormalizer`: Recieves a lambda method for normalizing amps. (for better visualization)
+- `ampNormalizer`: Receives a lambda method for normalizing amps. (for better visualization)
 
 - `addAmp`: Used for adding an amp to `RecorderVisualizer` and its bar gets drawn Immediately.
 
 - `updateTime`: Used for updating `PlayerVisualizer` timeline to specified location. `isPlaying` param is used for defining behaviour of `onFinishedSeeking` callback.
 
-- `onStartSeeking` : Recieves a callback for the action needed to happen when seeking starts.
+- `onStartSeeking` : Receives a callback for the action needed to happen when seeking starts.
 
-- `onSeeking` : Recieves a callback for the action needed to happen during the seeking process and contains current time position of the visualizer.
+- `onSeeking` : Receives a callback for the action needed to happen during the seeking process and contains current time position of the visualizer.
 
-- `onFinishedSeeking`: Recieves a callback for the action needed to happen after the seeking finishes and contains time position of the visualizer and a variable for deciding whether you need to resume player after seeking or not.
+- `onFinishedSeeking`: Receives a callback for the action needed to happen after the seeking finishes and contains time position of the visualizer and a variable for deciding whether you need to resume player after seeking or not.
 
 ## License
 MIT. See the [LICENSE](https://github.com/ImnIrdst/iiVisu/blob/main/LICENSE) file for details.
