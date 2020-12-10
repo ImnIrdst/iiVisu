@@ -33,8 +33,9 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
     private val player: ExoPlayer by lazy {
         SimpleExoPlayer.Builder(context).build()
             .apply {
-                prepare(context.recordFile.toMediaSource())
+                setMediaSource(context.recordFile.toMediaSource())
                 addListener(this@AudioPlayer)
+                prepare()
             }
     }
 
@@ -95,8 +96,8 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
         }
     }
 
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        super.onPlayerStateChanged(playWhenReady, playbackState)
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        super.onPlaybackStateChanged(playbackState)
         when (playbackState) {
             Player.STATE_READY -> {
                 if (player.playWhenReady) {

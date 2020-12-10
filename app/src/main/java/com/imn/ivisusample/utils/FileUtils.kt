@@ -2,6 +2,7 @@ package com.imn.ivisusample.utils
 
 import android.content.Context
 import androidx.core.net.toUri
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -22,4 +23,4 @@ fun File.toMediaSource(): MediaSource =
         .let { FileDataSource().apply { open(it) } }
         .let { DataSource.Factory { it } }
         .let { ProgressiveMediaSource.Factory(it, DefaultExtractorsFactory()) }
-        .createMediaSource(this.toUri())
+        .createMediaSource(MediaItem.fromUri(this.toUri()))

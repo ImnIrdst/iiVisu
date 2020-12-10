@@ -58,7 +58,7 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
 
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.8'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.12.0'
     implementation 'com.github.squti:Android-Wave-Recorder:1.4.0'
 
 
