@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.imn.ivisusample.databinding.ActivityPlayBinding
 import com.imn.ivisusample.player.AudioPlayer
 import com.imn.ivisusample.utils.formatAsTime
+import com.imn.ivisusample.utils.getDrawableCompat
 import kotlin.math.sqrt
 
 class PlayActivity : AppCompatActivity() {
@@ -18,9 +19,17 @@ class PlayActivity : AppCompatActivity() {
         binding = ActivityPlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        player = AudioPlayer.getInstance(applicationContext)
-        binding.visualizer.apply {
-            onStartSeeking = { player.pause() }
+        player = AudioPlayer.getInstance(applicationContext).init()
+
+        initUI()
+    }
+
+    private fun initUI() = with(binding) {
+        visualizer.apply {
+            ampNormalizer = { sqrt(it.toFloat()).toInt() }
+            onStartSeeking = {
+                player.pause()
+            }
             onSeeking = { binding.timelineTextView.text = it.formatAsTime() }
             onFinishedSeeking = { time, isPlayingBefore ->
                 player.seekTo(time)
@@ -28,34 +37,48 @@ class PlayActivity : AppCompatActivity() {
                     player.resume()
                 }
             }
+            onAnimateToPositionFinished = { time, isPlaying ->
+                updateTime(time, isPlaying)
+                player.seekTo(time)
+            }
         }
-        binding.playButton.setOnClickListener { player.togglePlay() }
+        playButton.setOnClickListener { player.togglePlay() }
+        seekForwardButton.setOnClickListener { visualizer.seekOver(SEEK_OVER_AMOUNT) }
+        seekBackwardButton.setOnClickListener { visualizer.seekOver(-SEEK_OVER_AMOUNT) }
 
         lifecycleScope.launchWhenCreated {
             val amps = player.loadAmps()
-            binding.visualizer.setWaveForm(amps, player.tickDuration)
+            visualizer.setWaveForm(amps, player.tickDuration)
         }
-
     }
 
     override fun onStart() {
         super.onStart()
-        binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
 
-        player.apply {
-            onStart = { binding.playButton.text = getString(R.string.pause) }
-            onStop = { binding.playButton.text = getString(R.string.play) }
-            onPause = { binding.playButton.text = getString(R.string.resume) }
-            onResume = { binding.playButton.text = getString(R.string.pause) }
-            onProgress = { time, isPlaying ->
-                binding.timelineTextView.text = time.formatAsTime()
-                binding.visualizer.updateTime(time.toInt(), isPlaying)
-            }
-        }
+        listenOnPlayerStates()
     }
 
     override fun onStop() {
         player.release()
         super.onStop()
+    }
+
+    private fun listenOnPlayerStates() = with(binding) {
+        player.apply {
+            onStart = { playButton.icon = getDrawableCompat(R.drawable.ic_pause_24) }
+            onStop = { playButton.icon = getDrawableCompat(R.drawable.ic_play_arrow_24) }
+            onPause = { playButton.icon = getDrawableCompat(R.drawable.ic_play_arrow_24) }
+            onResume = { playButton.icon = getDrawableCompat(R.drawable.ic_pause_24) }
+            onProgress = { time, isPlaying -> updateTime(time, isPlaying) }
+        }
+    }
+
+    private fun updateTime(time: Long, isPlaying: Boolean) = with(binding) {
+        timelineTextView.text = time.formatAsTime()
+        visualizer.updateTime(time, isPlaying)
+    }
+
+    companion object {
+        const val SEEK_OVER_AMOUNT = 5000
     }
 }

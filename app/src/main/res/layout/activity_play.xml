@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PlayActivity">
@@ -11,39 +11,59 @@
         android:layout_width="0dp"
         android:layout_height="256dp"
         android:layout_marginBottom="@dimen/spacing_double"
-        app:maxAmp="100"
-        app:barWidth="3dp"
-        app:spaceBetweenBar="2dp"
         app:approximateBarDuration="50"
-        app:loadedBarPrimeColor="@color/primaryLight"
         app:backgroundBarPrimeColor="@color/gray"
+        app:barWidth="3dp"
         app:layout_constraintBottom_toTopOf="@id/timeline_text_view"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:loadedBarPrimeColor="@color/primaryLight"
+        app:maxAmp="100"
+        app:spaceBetweenBar="2dp" />
 
     <TextView
         android:id="@+id/timeline_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
         android:layout_margin="@dimen/spacing_double"
         android:text="@string/zero_time"
         android:textColor="@color/primaryLight"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/visualizer"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/visualizer" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/play_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/IIVisuApp.CircleIconButton"
         android:layout_margin="@dimen/spacing_double"
-        android:text="@string/play"
+        app:icon="@drawable/ic_play_arrow_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearanceOverlay="@style/IIVisuApp.ShapeAppearanceOverlay.Button.Circle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/seek_forward_button"
+        style="@style/IIVisuApp.CircleIconButton"
+        android:layout_margin="@dimen/spacing_double"
+        app:icon="@drawable/ic_forward_5_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/play_button"
+        app:shapeAppearanceOverlay="@style/IIVisuApp.ShapeAppearanceOverlay.Button.Circle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/seek_backward_button"
+        style="@style/IIVisuApp.CircleIconButton"
+        android:layout_margin="@dimen/spacing_double"
+        app:icon="@drawable/ic_backward_5_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/play_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearanceOverlay="@style/IIVisuApp.ShapeAppearanceOverlay.Button.Circle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

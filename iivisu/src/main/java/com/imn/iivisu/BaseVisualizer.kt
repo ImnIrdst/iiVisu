@@ -18,7 +18,7 @@ open class BaseVisualizer : View {
 
     constructor(
         context: Context,
-        attrs: AttributeSet?
+        attrs: AttributeSet?,
     ) : super(context, attrs) {
         init()
         loadAttribute(context, attrs)
@@ -27,21 +27,21 @@ open class BaseVisualizer : View {
     constructor(
         context: Context,
         attrs: AttributeSet?,
-        defStyleAttr: Int
+        defStyleAttr: Int,
     ) : super(context, attrs, defStyleAttr) {
         init()
         loadAttribute(context, attrs)
     }
 
     var ampNormalizer: (Int) -> Int = { sqrt(it.toFloat()).toInt() }
-    protected var maxAmp = 50f
-    protected var approximateBarDuration = 50
+
     protected var amps = mutableListOf<Int>()
-    protected var spaceBetweenBar = 128f
+    protected var maxAmp = DEFAULT_MAX_AMP
+    protected var approximateBarDuration = 50
+    protected var spaceBetweenBar = 2f
     protected var cursorPosition = 0f
-    private var maxVisibleBars = 0
     protected var tickPerBar = 1
-    protected var tickDuration = 1000
+    protected var tickDuration = 1
     protected var tickCount = 0
     protected var barDuration = 1000
     protected var barWidth = 2f
@@ -52,9 +52,9 @@ open class BaseVisualizer : View {
                 this.loadedBarPrimeColor.strokeWidth = value
             }
         }
+    private var maxVisibleBars = 0
     private lateinit var loadedBarPrimeColor: Paint
     private lateinit var backgroundBarPrimeColor: Paint
-
 
     private fun init() {
         backgroundBarPrimeColor = Paint()
@@ -74,31 +74,36 @@ open class BaseVisualizer : View {
             R.styleable.iiVisu, 0, 0
         )
         try {
-            spaceBetweenBar = typedArray
-                .getDimension(R.styleable.iiVisu_spaceBetweenBar, context.dpToPx(2f))
+            spaceBetweenBar =
+                typedArray.getDimension(R.styleable.iiVisu_spaceBetweenBar, context.dpToPx(2f))
             approximateBarDuration =
                 typedArray.getInt(R.styleable.iiVisu_approximateBarDuration, 50)
-            barWidth = typedArray
-                .getDimension(R.styleable.iiVisu_barWidth, 2f)
-            maxAmp = typedArray
-                .getFloat(R.styleable.iiVisu_maxAmp, 50f)
-            loadedBarPrimeColor.color = typedArray.getColor(
-                R.styleable.iiVisu_loadedBarPrimeColor,
-                context.getColorCompat(R.color.orange)
-            )
-            backgroundBarPrimeColor.strokeWidth = barWidth
-            backgroundBarPrimeColor.color = typedArray.getColor(
-                R.styleable.iiVisu_backgroundBarPrimeColor,
-                context.getColorCompat(R.color.gray)
-            )
+
+            barWidth = typedArray.getDimension(R.styleable.iiVisu_barWidth, 2f)
+            maxAmp = typedArray.getFloat(R.styleable.iiVisu_maxAmp, 50f)
+
+            loadedBarPrimeColor.apply {
+                strokeWidth = barWidth
+                color = typedArray.getColor(
+                    R.styleable.iiVisu_loadedBarPrimeColor,
+                    context.getColorCompat(R.color.orange)
+                )
+            }
+            backgroundBarPrimeColor.apply {
+                strokeWidth = barWidth
+                color = typedArray.getColor(
+                    R.styleable.iiVisu_backgroundBarPrimeColor,
+                    context.getColorCompat(R.color.gray)
+                )
+            }
+
         } finally {
             typedArray.recycle()
         }
     }
 
     protected val currentDuration: Long
-        get() = cursorPosition.toLong() * tickDuration
-
+        get() = getTimeStamp(cursorPosition)
 
     override fun onDraw(canvas: Canvas) {
         if (amps.isNotEmpty()) {
@@ -108,16 +113,6 @@ open class BaseVisualizer : View {
             }
         }
         super.onDraw(canvas)
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        maxVisibleBars = (width / (barWidth + spaceBetweenBar)).toInt()
-    }
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        maxVisibleBars = (w / (barWidth + spaceBetweenBar)).toInt()
     }
 
     private fun drawStraightBar(canvas: Canvas, startX: Float, height: Int, baseLine: Int) {
@@ -135,4 +130,27 @@ open class BaseVisualizer : View {
     private fun getEndBar() = min(amps.size, getStartBar() + maxVisibleBars)
     private fun getBarHeightAt(i: Int) = height * max(0.01f, min(amps[i] / maxAmp, 0.9f))
     private fun getBarPosition() = cursorPosition / tickPerBar.toFloat()
+    private fun inRangePosition(position: Float) = min(tickCount.toFloat(), max(0f, position))
+    protected fun getTimeStamp(position: Float) = (position.toLong() * tickDuration)
+    protected fun calculateCursorPosition(currentTime: Long) =
+        inRangePosition(currentTime / tickDuration.toFloat())
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        maxVisibleBars = (width / (barWidth + spaceBetweenBar)).toInt()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        maxVisibleBars = (w / (barWidth + spaceBetweenBar)).toInt()
+    }
+
+    override fun onDetachedFromWindow() {
+        ampNormalizer = { 0 }
+        super.onDetachedFromWindow()
+    }
+
+    companion object {
+        var DEFAULT_MAX_AMP = 10000f
+    }
 }

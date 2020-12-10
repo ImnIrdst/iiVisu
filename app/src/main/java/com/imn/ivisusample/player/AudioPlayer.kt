@@ -1,7 +1,6 @@
 package com.imn.ivisusample.player
 
 import android.content.Context
-import android.os.CountDownTimer
 import android.util.Log
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
@@ -12,13 +11,17 @@ import com.imn.ivisusample.utils.SingletonHolder
 import com.imn.ivisusample.utils.WAVE_HEADER_SIZE
 import com.imn.ivisusample.utils.recordFile
 import com.imn.ivisusample.utils.toMediaSource
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-class AudioPlayer private constructor(context: Context) : Player.EventListener {
+class AudioPlayer private constructor(applicationContext: Context) : Player.EventListener {
+
+    private val context = applicationContext
 
     var onProgress: ((Long, Boolean) -> Unit)? = null
     var onStart: (() -> Unit)? = null
@@ -27,25 +30,38 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
     var onResume: (() -> Unit)? = null
     val tickDuration = Recorder.getInstance(context).tickDuration
 
-    private var timer: CountDownTimer? = null
-    private val recordFile = context.recordFile
-    private val bufferSize = Recorder.getInstance(context).bufferSize
-    private val player: ExoPlayer by lazy {
-        SimpleExoPlayer.Builder(context).build()
-            .apply {
-                setMediaSource(context.recordFile.toMediaSource())
-                addListener(this@AudioPlayer)
-                prepare()
-            }
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    private var loopingFlowJob: Job? = null
+    private var loopingFlow = flow {
+        while (true) {
+            emit(Unit)
+            delay(LOOP_DURATION)
+        }
+    }
+
+    private val recordFile = applicationContext.recordFile
+    private val bufferSize = Recorder.getInstance(applicationContext).bufferSize
+
+    private lateinit var player: ExoPlayer
+
+    fun init(): AudioPlayer {
+        if (::player.isInitialized) {
+            player.release()
+        }
+        player = SimpleExoPlayer.Builder(context).build().apply {
+            setMediaSource(recordFile.toMediaSource())
+            prepare()
+            addListener(this@AudioPlayer)
+        }
+        return this
     }
 
     fun togglePlay() {
-        player.apply {
-            if (!playWhenReady) {
-                playWhenReady = true
-            } else {
-                pause()
-            }
+        if (!player.isPlaying) {
+            resume()
+        } else {
+            pause()
         }
     }
 
@@ -54,14 +70,13 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
     }
 
     fun resume() {
-        player.playWhenReady = true
+        player.play()
         updateProgress()
         onResume?.invoke()
     }
 
     fun pause() {
-        timer?.cancel()
-        player.playWhenReady = false
+        player.pause()
         updateProgress()
         onPause?.invoke()
     }
@@ -99,38 +114,46 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)
         when (playbackState) {
-            Player.STATE_READY -> {
-                if (player.playWhenReady) {
-                    val timerDuration = player.duration - player.currentPosition
-                    timer?.cancel()
-                    timer = object : CountDownTimer(timerDuration, 20) {
-                        override fun onTick(millisUntilFinished: Long) {
-                            updateProgress()
-                        }
-
-                        override fun onFinish() {
-                            updateProgress(player.duration)
-                        }
-                    }.start()
-                    onStart?.invoke()
-                }
-            }
             Player.STATE_ENDED -> {
-                seekTo(0)
-                player.playWhenReady = false
+                updateProgress(player.duration)
                 onStop?.invoke()
+                reset()
             }
+            Player.STATE_READY -> Unit
             Player.STATE_BUFFERING -> Unit
             Player.STATE_IDLE -> Unit
         }
     }
 
-    override fun onPlayerError(error: ExoPlaybackException) {
-        super.onPlayerError(error)
-        Log.e(TAG, error.toString())
+    private fun reset() {
+        player.prepare()
+        player.pause()
+        player.seekTo(0)
     }
 
+    override fun onIsPlayingChanged(isPlaying: Boolean) {
+        super.onIsPlayingChanged(isPlaying)
+        if (isPlaying) {
+            loopingFlowJob?.cancel()
+            loopingFlowJob = coroutineScope.launch {
+                loopingFlow.collect {
+                    updateProgress()
+                }
+            }
+            onStart?.invoke()
+        } else {
+            loopingFlowJob?.cancel()
+        }
+    }
+
+    override fun onPlayerError(error: ExoPlaybackException) {
+        super.onPlayerError(error)
+        Log.e(TAG, error.toString(), error)
+    }
+
+
     fun release() {
+        player.release()
         onProgress = null
         onStart = null
         onStop = null
@@ -139,6 +162,7 @@ class AudioPlayer private constructor(context: Context) : Player.EventListener {
     }
 
     companion object : SingletonHolder<AudioPlayer, Context>(::AudioPlayer) {
-        val TAG = AudioPlayer::class.simpleName
+        private const val LOOP_DURATION = 20L
+        private val TAG = AudioPlayer::class.simpleName
     }
 }

@@ -1,5 +1,8 @@
 package com.imn.iivisu
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
@@ -21,13 +24,14 @@ class PlayerVisualizer : BaseVisualizer {
     constructor(
         context: Context,
         attrs: AttributeSet?,
-        defStyleAttr: Int
+        defStyleAttr: Int,
     ) : super(context, attrs, defStyleAttr)
 
 
     var onStartSeeking: (() -> Unit)? = null
     var onSeeking: ((Long) -> Unit)? = null
     var onFinishedSeeking: ((Long, Boolean) -> Unit)? = null
+    var onAnimateToPositionFinished: ((Long, Boolean) -> Unit)? = null
 
     private var initialTouchX = 0f
     private var firstTouchX = 0f
@@ -100,26 +104,54 @@ class PlayerVisualizer : BaseVisualizer {
             this.amps.add(normalizedAmps.subList(i, j).average().toInt())
         }
 
-        this.tickCount = this.amps.size * tickPerBar
+        this.tickCount = this.amps.size * this.tickPerBar
         this.cursorPosition = 0f
 
         this.amps.maxOrNull()?.let {
             this.maxAmp = max(it.toFloat(), maxAmp)
         }
-        
+
         invalidate()
     }
 
-    fun updateTime(currentTime: Int, isPlaying: Boolean) {
+    fun updateTime(currentTime: Long, isPlaying: Boolean) {
         this.isPlaying = isPlaying
-        this.cursorPosition = min(currentTime / tickDuration.toFloat(), tickCount.toFloat())
+        this.cursorPosition = calculateCursorPosition(currentTime)
         invalidate()
+    }
+
+    fun seekOver(fastSeekAmount: Int) {
+        animateToTimeStamp(currentDuration + fastSeekAmount)
+    }
+
+    fun animateToTimeStamp(timeStamp: Long) {
+        val finishCursorPosition = calculateCursorPosition(timeStamp)
+        val startCursorPosition = cursorPosition
+        val diff = finishCursorPosition - startCursorPosition
+        val animateDuration = 500L
+
+        ValueAnimator.ofInt(0, diff.toInt()).apply {
+            duration = animateDuration
+            addUpdateListener {
+                cursorPosition = startCursorPosition + it.animatedValue as Int
+                invalidate()
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    onAnimateToPositionFinished?.invoke(
+                        getTimeStamp(finishCursorPosition), isPlaying
+                    )
+                }
+            })
+            start()
+        }
     }
 
     override fun onDetachedFromWindow() {
         onStartSeeking = null
         onSeeking = null
         onFinishedSeeking = null
+        onAnimateToPositionFinished = null
         super.onDetachedFromWindow()
     }
 }
