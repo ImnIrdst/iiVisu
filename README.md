@@ -25,7 +25,7 @@ allprojects {
 Step 2. Add the dependency
 ```
 dependencies {
-  implementation 'com.github.imnirdst:iivisu:1.0.1'
+  implementation 'com.github.imnirdst:iivisu:1.1.0'
 }
 ```
 
@@ -54,13 +54,13 @@ This repository contains a sample app that shows how to use iiVisu.
 ```
 
 ```Kotlin
-binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
+visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
 
 recorder.apply {
-    onStop = { binding.visualizer.clear() }
+    onStop = { visualizer.clear() }
     onAmpListener = {
         runOnUiThread {
-            binding.visualizer.addAmp(it)
+            visualizer.addAmp(it)
         }
     }
 }
@@ -84,21 +84,24 @@ recorder.apply {
 ```
 
 ```Kotlin
-binding.visualizer.apply {
+visualizer.apply {
     onStartSeeking = { player.pause() }
-    onSeeking = { binding.timelineTextView.text = it.formatAsTime() }
+    onSeeking = { timelineTextView.text = it.formatAsTime() }
     onFinishedSeeking = { time, isPlayingBefore ->
         player.seekTo(time)
         if (isPlayingBefore) {
             player.resume()
         }
+    onAnimateToPositionFinished = { time, isPlaying ->
+            player.seekTo(time)
+        }
     }
 }
 
-binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
+visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
 
 player.onProgress = { time, isPlaying ->
-    binding.visualizer.updateTime(time.toInt(), isPlaying)
+    visualizer.updateTime(time.toInt(), isPlaying)
 }
 ```
 
@@ -109,7 +112,7 @@ player.onProgress = { time, isPlaying ->
 
 - `spaceBetweenBar`: Space between each bar.
 
-- `approximateBarDuration`: Defines approximate duration of each bar. The exact duration of each bar is calculated and stored in the `barDuration` variable. This is only used in `PlayerVisualizer`. `RecorderVisualizer` draws a bar per each received amp.
+- `approximateBarDuration`: Defines approximate duration of each bar. The exact duration of each bar is calculated and stored in the `barDuration` variable.
 
 - `loadedBarPrimeColor`: Defines loaded bar color.
 
@@ -126,6 +129,12 @@ player.onProgress = { time, isPlaying ->
 - `onSeeking` : Receives a callback for the action needed to happen during the seeking process and contains current time position of the visualizer.
 
 - `onFinishedSeeking`: Receives a callback for the action needed to happen after the seeking finishes and contains time position of the visualizer and a variable for deciding whether you need to resume player after seeking or not.
+
+- `seekOver(amount)`: Moves visualizer's cursor `amount` ahead/back and notifies using `onAnimateToPositionFinished` callback.
+
+- `seekTo(position)`: Moves visualizer's cursor to `position` and notifies using `onAnimateToPositionFinished` callback.
+
+- `onAnimateToPositionFinished`: Receives a callback for the action needed to happen after the moving to position finishes and contains time position of the visualizer and a variable for deciding whether you need to resume player after seeking or not.
 
 ## License
 MIT. See the [LICENSE](https://github.com/ImnIrdst/iiVisu/blob/main/LICENSE) file for details.

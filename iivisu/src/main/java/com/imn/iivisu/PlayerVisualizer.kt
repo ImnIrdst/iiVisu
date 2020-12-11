@@ -120,11 +120,11 @@ class PlayerVisualizer : BaseVisualizer {
         invalidate()
     }
 
-    fun seekOver(fastSeekAmount: Int) {
-        animateToTimeStamp(currentDuration + fastSeekAmount)
+    fun seekOver(amount: Int) {
+        seekTo(currentDuration + amount)
     }
 
-    fun animateToTimeStamp(timeStamp: Long) {
+    fun seekTo(timeStamp: Long) {
         val finishCursorPosition = calculateCursorPosition(timeStamp)
         val startCursorPosition = cursorPosition
         val diff = finishCursorPosition - startCursorPosition
