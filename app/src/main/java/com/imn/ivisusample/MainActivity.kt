@@ -8,6 +8,7 @@ import com.imn.ivisusample.databinding.ActivityMainBinding
 import com.imn.ivisusample.recorder.Recorder
 import com.imn.ivisusample.utils.checkAudioPermission
 import com.imn.ivisusample.utils.formatAsTime
+import com.imn.ivisusample.utils.getDrawableCompat
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
@@ -25,33 +26,41 @@ class MainActivity : AppCompatActivity() {
         checkAudioPermission(AUDIO_PERMISSION_REQUEST_CODE)
 
         recorder = Recorder.getInstance(applicationContext)
-        binding.recordButton.setOnClickListener { recorder.toggleRecording() }
+
+        initUI()
     }
 
     override fun onStart() {
         super.onStart()
-        binding.visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
-        
-        recorder.apply {
-            onStart = { binding.recordButton.text = getString(R.string.stop) }
-            onStop = {
-                binding.visualizer.clear()
-                binding.recordButton.text = getString(R.string.record)
-                startActivity(Intent(this@MainActivity, PlayActivity::class.java))
-            }
-            onAmpListener = {
-                runOnUiThread {
-                    binding.timelineTextView.text = recorder.getCurrentTime().formatAsTime()
-
-                    binding.visualizer.addAmp(it)
-                }
-            }
-        }
+        listenOnRecorderStates()
     }
 
     override fun onStop() {
         recorder.release()
         super.onStop()
+    }
+
+    private fun initUI() = with(binding) {
+        recordButton.setOnClickListener { recorder.toggleRecording() }
+        visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
+    }
+
+    private fun listenOnRecorderStates() = with(binding) {
+        recorder.apply {
+            onStart = { recordButton.icon = getDrawableCompat(R.drawable.ic_stop_24) }
+            onStop = {
+                visualizer.clear()
+                recordButton.icon = getDrawableCompat(R.drawable.ic_record_24)
+                startActivity(Intent(this@MainActivity, PlayActivity::class.java))
+            }
+            onAmpListener = {
+                runOnUiThread {
+                    timelineTextView.text = recorder.getCurrentTime().formatAsTime()
+                    visualizer.addAmp(it, tickDuration)
+                }
+            }
+        }
+
     }
 
     companion object {

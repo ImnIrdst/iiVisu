@@ -9,9 +9,9 @@
     <com.imn.iivisu.PlayerVisualizer
         android:id="@+id/visualizer"
         android:layout_width="0dp"
-        android:layout_height="256dp"
+        android:layout_height="@dimen/visualizer_height"
         android:layout_marginBottom="@dimen/spacing_double"
-        app:approximateBarDuration="50"
+        app:approximateBarDuration="75"
         app:backgroundBarPrimeColor="@color/gray"
         app:barWidth="3dp"
         app:layout_constraintBottom_toTopOf="@id/timeline_text_view"

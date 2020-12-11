@@ -10,11 +10,11 @@
     <com.imn.iivisu.RecorderVisualizer
         android:id="@+id/visualizer"
         android:layout_width="0dp"
-        android:layout_height="256dp"
+        android:layout_height="@dimen/visualizer_height"
         app:maxAmp="100"
         app:barWidth="3dp"
         app:spaceBetweenBar="2dp"
-        app:approximateBarDuration="50"
+        app:approximateBarDuration="75"
         app:loadedBarPrimeColor="@color/primaryLight"
         app:backgroundBarPrimeColor="@color/gray"
         app:layout_constraintBottom_toTopOf="@id/timeline_text_view"
@@ -38,12 +38,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/record_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/IIVisuApp.CircleIconButton"
         android:layout_margin="@dimen/spacing_double"
-        android:text="@string/record"
+        app:icon="@drawable/ic_record_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearanceOverlay="@style/IIVisuApp.ShapeAppearanceOverlay.Button.Circle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

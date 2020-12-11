@@ -9,20 +9,32 @@ class RecorderVisualizer : BaseVisualizer {
 
     constructor(
         context: Context,
-        attrs: AttributeSet?
+        attrs: AttributeSet?,
     ) : super(context, attrs)
 
 
     constructor(
         context: Context,
         attrs: AttributeSet?,
-        defStyleAttr: Int
+        defStyleAttr: Int,
     ) : super(context, attrs, defStyleAttr)
 
-    fun addAmp(amp: Int) {
-        val normalizedAmp = ampNormalizer.invoke(amp)
-        amps.add(normalizedAmp)
-        cursorPosition = (amps.size - 1).toFloat()
+    private val tempAmps = mutableListOf<Int>()
+    fun addAmp(amp: Int, tickDuration: Int) {
+        this.tickDuration = tickDuration
+        this.tickPerBar = approximateBarDuration / (this.tickDuration)
+        this.barDuration = tickPerBar * this.tickDuration
+        this.tempAmps.add(amp)
+        if (tempAmps.size >= tickPerBar) {
+            this.amps.add(ampNormalizer.invoke(tempAmps.average().toInt()))
+            this.tempAmps.clear()
+        }
+        val lastBarPosition = if (tempAmps.size < tickPerBar) {
+            tickPerBar.toFloat() / (tickPerBar - tempAmps.size)
+        } else {
+            tickPerBar.toFloat()
+        }
+        this.cursorPosition = ((amps.size - 1) * tickPerBar).toFloat() + lastBarPosition
         invalidate()
     }
 

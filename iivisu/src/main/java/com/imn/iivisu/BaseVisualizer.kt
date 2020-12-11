@@ -36,7 +36,7 @@ open class BaseVisualizer : View {
     var ampNormalizer: (Int) -> Int = { sqrt(it.toFloat()).toInt() }
 
     protected var amps = mutableListOf<Int>()
-    protected var maxAmp = DEFAULT_MAX_AMP
+    protected var maxAmp = 10000f
     protected var approximateBarDuration = 50
     protected var spaceBetweenBar = 2f
     protected var cursorPosition = 0f
@@ -148,9 +148,5 @@ open class BaseVisualizer : View {
     override fun onDetachedFromWindow() {
         ampNormalizer = { 0 }
         super.onDetachedFromWindow()
-    }
-
-    companion object {
-        var DEFAULT_MAX_AMP = 10000f
     }
 }
