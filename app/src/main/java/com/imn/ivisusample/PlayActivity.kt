@@ -18,10 +18,17 @@ class PlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
 
-        player = AudioPlayer.getInstance(applicationContext).init()
-
+    override fun onStart() {
+        super.onStart()
+        listenOnPlayerStates()
         initUI()
+    }
+
+    override fun onStop() {
+        player.release()
+        super.onStop()
     }
 
     private fun initUI() = with(binding) {
@@ -52,19 +59,8 @@ class PlayActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        listenOnPlayerStates()
-    }
-
-    override fun onStop() {
-        player.release()
-        super.onStop()
-    }
-
     private fun listenOnPlayerStates() = with(binding) {
-        player.apply {
+        player = AudioPlayer.getInstance(applicationContext).init().apply {
             onStart = { playButton.icon = getDrawableCompat(R.drawable.ic_pause_24) }
             onStop = { playButton.icon = getDrawableCompat(R.drawable.ic_play_arrow_24) }
             onPause = { playButton.icon = getDrawableCompat(R.drawable.ic_play_arrow_24) }

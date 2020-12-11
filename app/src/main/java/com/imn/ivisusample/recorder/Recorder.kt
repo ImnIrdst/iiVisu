@@ -20,10 +20,17 @@ class Recorder private constructor(context: Context) {
 
     private var startTime: Long = 0
     private val recordingConfig = WaveConfig()
-    private val recorder = WaveRecorder(context.recordFile.toString())
-        .apply { waveConfig = recordingConfig }
+    private val appContext = context.applicationContext
+    private lateinit var recorder: WaveRecorder
 
-    private var isRecording = false
+    var isRecording = false
+        private set
+
+    fun init(): Recorder {
+        recorder = WaveRecorder(appContext.recordFile.toString())
+            .apply { waveConfig = recordingConfig }
+        return this
+    }
 
     fun toggleRecording() {
         isRecording = if (!isRecording) {

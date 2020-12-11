@@ -47,7 +47,7 @@ dependencies {
 
     implementation project(path: ':iivisu')
 
-//    implementation 'com.github.imnirdst:iivisu:1.0.0'
+//    implementation 'com.github.imnirdst:iivisu:1.1.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
@@ -64,6 +64,8 @@ dependencies {
 
     implementation 'com.google.android.exoplayer:exoplayer-core:2.12.0'
     implementation 'com.github.squti:Android-Wave-Recorder:1.4.0'
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -25,8 +25,6 @@ class MainActivity : AppCompatActivity() {
 
         checkAudioPermission(AUDIO_PERMISSION_REQUEST_CODE)
 
-        recorder = Recorder.getInstance(applicationContext)
-
         initUI()
     }
 
@@ -46,21 +44,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun listenOnRecorderStates() = with(binding) {
-        recorder.apply {
+        recorder = Recorder.getInstance(applicationContext).init().apply {
             onStart = { recordButton.icon = getDrawableCompat(R.drawable.ic_stop_24) }
             onStop = {
                 visualizer.clear()
+                timelineTextView.text = 0L.formatAsTime()
                 recordButton.icon = getDrawableCompat(R.drawable.ic_record_24)
                 startActivity(Intent(this@MainActivity, PlayActivity::class.java))
             }
             onAmpListener = {
                 runOnUiThread {
-                    timelineTextView.text = recorder.getCurrentTime().formatAsTime()
-                    visualizer.addAmp(it, tickDuration)
+                    if (recorder.isRecording) {
+                        timelineTextView.text = recorder.getCurrentTime().formatAsTime()
+                        visualizer.addAmp(it, tickDuration)
+                    }
                 }
             }
         }
-
     }
 
     companion object {

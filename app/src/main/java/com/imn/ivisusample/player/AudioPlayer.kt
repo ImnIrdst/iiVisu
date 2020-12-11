@@ -19,16 +19,16 @@ import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-class AudioPlayer private constructor(applicationContext: Context) : Player.EventListener {
+class AudioPlayer private constructor(context: Context) : Player.EventListener {
 
-    private val context = applicationContext
+    private val appContext = context.applicationContext
 
     var onProgress: ((Long, Boolean) -> Unit)? = null
     var onStart: (() -> Unit)? = null
     var onStop: (() -> Unit)? = null
     var onPause: (() -> Unit)? = null
     var onResume: (() -> Unit)? = null
-    val tickDuration = Recorder.getInstance(context).tickDuration
+    val tickDuration = Recorder.getInstance(this.appContext).tickDuration
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -40,8 +40,8 @@ class AudioPlayer private constructor(applicationContext: Context) : Player.Even
         }
     }
 
-    private val recordFile = applicationContext.recordFile
-    private val bufferSize = Recorder.getInstance(applicationContext).bufferSize
+    private val recordFile = context.recordFile
+    private val bufferSize = Recorder.getInstance(context).bufferSize
 
     private lateinit var player: ExoPlayer
 
@@ -49,7 +49,7 @@ class AudioPlayer private constructor(applicationContext: Context) : Player.Even
         if (::player.isInitialized) {
             player.release()
         }
-        player = SimpleExoPlayer.Builder(context).build().apply {
+        player = SimpleExoPlayer.Builder(appContext).build().apply {
             setMediaSource(recordFile.toMediaSource())
             prepare()
             addListener(this@AudioPlayer)
