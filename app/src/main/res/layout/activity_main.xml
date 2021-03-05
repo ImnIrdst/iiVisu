@@ -11,30 +11,30 @@
         android:id="@+id/visualizer"
         android:layout_width="0dp"
         android:layout_height="@dimen/visualizer_height"
-        app:maxAmp="100"
-        app:barWidth="3dp"
-        app:spaceBetweenBar="2dp"
+        android:layout_marginVertical="128dp"
+        android:background="@color/dark_gray"
         app:approximateBarDuration="75"
-        app:loadedBarPrimeColor="@color/primaryLight"
         app:backgroundBarPrimeColor="@color/gray"
-        app:layout_constraintBottom_toTopOf="@id/timeline_text_view"
-        app:layout_constraintTop_toTopOf="parent"
+        app:barWidth="3dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:loadedBarPrimeColor="@color/primaryLight"
+        app:maxAmp="100"
+        app:spaceBetweenBar="2dp" />
 
     <TextView
         android:id="@+id/timeline_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
         android:layout_margin="@dimen/spacing_double"
         android:text="@string/zero_time"
         android:textColor="@color/primaryLight"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/record_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/visualizer"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/record_button"

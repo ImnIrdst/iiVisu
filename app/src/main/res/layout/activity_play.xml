@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/visualizer_height"
         android:layout_marginBottom="@dimen/spacing_double"
+        android:background="@color/dark_gray"
         app:approximateBarDuration="75"
         app:backgroundBarPrimeColor="@color/gray"
         app:barWidth="3dp"
@@ -31,10 +32,9 @@
         android:text="@string/zero_time"
         android:textColor="@color/primaryLight"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/play_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/visualizer" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/play_button"

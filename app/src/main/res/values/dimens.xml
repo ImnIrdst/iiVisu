@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="spacing_double">32dp</dimen>
+    <dimen name="spacing_huge">64dp</dimen>
     <dimen name="visualizer_height">300dp</dimen>
 </resources>
