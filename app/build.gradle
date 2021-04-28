@@ -43,7 +43,7 @@ kotlin {
 }
 
 dependencies {
-    def coroutine_version = '1.4.2'
+    def coroutine_version = '1.4.3-native-mt'
 
     implementation project(path: ':iivisu')
 
