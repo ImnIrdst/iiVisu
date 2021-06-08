@@ -12,6 +12,8 @@
 /.idea/misc.xml
 /.idea/jarRepositories.xml
 /.idea/dictionaries
+/.idea/compiler.xml
+/.idea/runConfigurations.xml
 
 .DS_Store
 /build
