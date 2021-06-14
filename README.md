@@ -103,6 +103,9 @@ visualizer.ampNormalizer = { sqrt(it.toFloat()).toInt() }
 player.onProgress = { time, isPlaying ->
     visualizer.updateTime(time.toInt(), isPlaying)
 }
+
+val amps = player.loadAmps()
+visualizer.setWaveForm(amps, player.tickDuration)
 ```
 
 # Documentation
@@ -121,6 +124,8 @@ player.onProgress = { time, isPlaying ->
 - `ampNormalizer`: Receives a lambda method for normalizing amps. (for better visualization)
 
 - `addAmp`: Used for adding an amp to `RecorderVisualizer` and its bar gets drawn Immediately.
+
+- `setWaveForm`: Receives a list of integer `amps` and a `tickDuration` which defines the time per each amp.
 
 - `updateTime`: Used for updating `PlayerVisualizer` timeline to specified location. `isPlaying` param is used for defining behaviour of `onFinishedSeeking` callback.
 
