@@ -61,7 +61,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.13.2'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.14.2'
     implementation 'com.github.squti:Android-Wave-Recorder:1.4.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
