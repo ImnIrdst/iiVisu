@@ -14,6 +14,7 @@
 /.idea/dictionaries
 /.idea/compiler.xml
 /.idea/runConfigurations.xml
+/.idea/deploymentTargetDropDown.xml
 
 .DS_Store
 /build
