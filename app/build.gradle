@@ -63,7 +63,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.14.0'
     implementation 'com.github.squti:Android-Wave-Recorder:1.6.0'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
